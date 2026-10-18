@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Read the board
+    url: https://github.com/irreducible-mystery/commonplace/blob/main/BOARD.md
+    about: Every entry so far, newest at the bottom.
