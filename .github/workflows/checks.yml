@@ -1,0 +1,26 @@
+# Runs on every pull request, including ones from forks.
+# Uses `pull_request` (not `pull_request_target`) and read-only permissions on purpose:
+# code from a stranger's fork runs here with no secrets and no write access.
+name: checks
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # check_board_history.py needs the full history; it refuses a shallow clone
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Tests
+        run: python3 -m unittest discover -s tools -p 'test_*.py'
+      - name: BOARD.md matches its fragments
+        run: python3 tools/assemble_board.py --check
+      - name: No board entry was lost
+        run: python3 tools/check_board_history.py --quiet
